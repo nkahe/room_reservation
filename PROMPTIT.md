@@ -4686,3 +4686,75 @@ If you want, I can write a robust `scripts/demo.sh` that generates ISO times rel
   No tests run (doc-only change). If you want, run:
 
   - npm test
+
+
+› create section in README.md which describes project overall architecture
+
+
+• I plan to read the README and other files using ripgrep for efficient content
+  retrieval rather than shell cat or ls commands.
+
+• Explored
+  └ List ls
+    Read README.md
+
+• I'm checking the CODING_RULES to see if architecture conventions or sectioning
+  guidelines are described before adding a new section.
+
+• Explored
+  └ Read CODING_RULES.md
+
+• Planning to create a new architecture section in the README using details from
+  CODING_RULES, positioning it after assumptions or before the API section with
+  bullet points. I'll prepare the file edits next.
+
+• Edited README.md (+15 -0)
+    16
+    17 +## Architecture
+    18 +
+    19 +Layered design keeps HTTP concerns separate from business logic and pers
+        istence:
+    20 +
+    21 +- `domain/`: pure types + error classes (no Express imports)
+    22 +- `services/`: business rules and orchestration (no Express imports)
+    23 +- `repositories/`: persistence interface + in-memory implementation
+    24 +- `http/`: Express routes, DTO validation, and error mapping
+    25 +- App composition wires dependencies in one place
+    26 +
+    27 +Key rules:
+    28 +- Business logic does not depend on Express.
+    29 +- HTTP layer validates request DTOs; services enforce business rules.
+    30 +- Time is abstracted via a `Clock` interface to keep services testable.
+    31 +
+    32  ## API
+
+─ Worked for 14s ───────────────────────────────────────────────────────────────
+
+• Added an Architecture section to the README, aligned with the existing
+  layering rules and time abstraction. You can find it in README.md.
+
+  If you want it expanded with a diagram or module map, say the word and I’ll
+  add one.
+
+
+› include in README.md what technologies are used in project
+
+
+• Edited README.md (+8 -0)
+     4
+     5 +## Technologies
+     6 +
+     7 +- TypeScript (strict)
+     8 +- Node.js
+     9 +- Express
+    10 +- Vitest
+    11 +- Supertest
+    12 +
+    13  ## Assumptions
+
+─ Worked for 6s ──────────────────────────────────────────────────────────────────────────────────────
+
+• Added a Technologies section near the top of README.md with the stack used.
+
+  If you want versions or tooling details (ts-node/tsx, npm scripts, etc.), tell me which level of
+  detail you prefer.

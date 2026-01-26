@@ -2,6 +2,14 @@
 
 A small REST API for reserving meeting rooms with an in-memory store, built as a job assignment.
 
+## Technologies
+
+- TypeScript (strict)
+- Node.js
+- Express
+- Vitest
+- Supertest
+
 ## Assumptions
 Since the assignment leaves room for interpretation, these assumptions are used:
 
@@ -11,8 +19,22 @@ Since the assignment leaves room for interpretation, these assumptions are used:
 - Validation is done against server time (epoch ms).
 - Reservation interval semantics are **[start, end)** (end is exclusive), allowing back-to-back bookings.
 - No authentication/authorization.
-- In-memory only; data resets on restart.
 - Seeded dummy reservations are always in the future (relative to server start time).
+
+## Architecture
+
+Layered design keeps HTTP concerns separate from business logic and persistence:
+
+- `domain/`: pure types + error classes (no Express imports)
+- `services/`: business rules and orchestration (no Express imports)
+- `repositories/`: persistence interface + in-memory implementation
+- `http/`: Express routes, DTO validation, and error mapping
+- App composition wires dependencies in one place
+
+Key rules:
+- Business logic does not depend on Express.
+- HTTP layer validates request DTOs; services enforce business rules.
+- Time is abstracted via a `Clock` interface to keep services testable.
 
 ## API
 
