@@ -1,10 +1,14 @@
 import { Router } from "express";
-import { ReservationService } from "../../services/reservationService";
+import {
+  CreateReservationInput,
+  ReservationService,
+} from "../../services/reservationService";
 import { toReservationDto } from "../dto/reservationDto";
 import {
   validateCreateReservationBody,
   validateListReservationsQuery,
 } from "../middleware/validate";
+import { ValidationError } from "../../domain/errors";
 
 export function createReservationsRouter(
   reservationService: ReservationService
@@ -16,12 +20,21 @@ export function createReservationsRouter(
     validateCreateReservationBody,
     (req, res, next) => {
       try {
-        const reservation = reservationService.createReservation({
-          roomId: req.params.roomId,
+        const roomId = req.params.roomId;
+        if (!roomId) {
+          throw new ValidationError("roomId is required", { field: "roomId" });
+        }
+
+        const input: CreateReservationInput = {
+          roomId,
           startTime: req.body.startTime,
           endTime: req.body.endTime,
-          reservedBy: req.body.reservedBy,
-        });
+        };
+        if (req.body.reservedBy !== undefined) {
+          input.reservedBy = req.body.reservedBy;
+        }
+
+        const reservation = reservationService.createReservation(input);
 
         res.status(201).json(toReservationDto(reservation));
       } catch (err) {
@@ -35,13 +48,18 @@ export function createReservationsRouter(
     validateListReservationsQuery,
     (req, res, next) => {
       try {
+        const roomId = req.params.roomId;
+        if (!roomId) {
+          throw new ValidationError("roomId is required", { field: "roomId" });
+        }
+
         const fromValue =
           typeof req.query.from === "string" ? req.query.from : undefined;
         const toValue =
           typeof req.query.to === "string" ? req.query.to : undefined;
 
         const reservations = reservationService.listReservationsForRoom(
-          req.params.roomId,
+          roomId,
           {
             from: fromValue,
             to: toValue,
@@ -49,7 +67,7 @@ export function createReservationsRouter(
         );
 
         res.json({
-          roomId: req.params.roomId,
+          roomId,
           reservations: reservations.map(toReservationDto),
         });
       } catch (err) {

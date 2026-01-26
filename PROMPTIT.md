@@ -4758,3 +4758,100 @@ If you want, I can write a robust `scripts/demo.sh` that generates ISO times rel
 
   If you want versions or tooling details (ts-node/tsx, npm scripts, etc.), tell me which level of
   detail you prefer.
+
+
+› I get error when buildind:
+  via  v22.20.0 room_reservation_API on  main ❌1 ❯ npm run build
+
+  > meeting-room-reservations@1.0.0 build
+  > tsc -p tsconfig.json
+
+  error TS6059: File '/home/henri/projects/room_reservation_API/tests/domain-errors.test.ts' is not
+  under 'rootDir' '/home/henri/projects/room_reservation_API/src'. 'rootDir' is expected to contain
+  all sourc
+  e files.
+    The file is in the program because:
+      Matched by include pattern 'tests/**/*.ts' in 'tsconfig.json'
+
+    tsconfig.json:21:30
+      21   "include": ["src/**/*.ts", "tests/**/*.ts"],
+                                      ~~~~~~~~~~~~~~~
+      File is matched by include pattern specified here.
+
+
+• Updated tsconfig.json to only include src/**/*.ts so npm run build doesn’t pull test files under
+  tests/ into the compile.
+
+  If you want tests type-checked separately, I can add a tsconfig.test.json and wire it into npm test.
+
+
+
+› building gives errors:
+
+  ❯ npm run build
+
+  > meeting-room-reservations@1.0.0 build
+  > tsc -p tsconfig.json
+
+  src/http/dto/reservationDto.ts:13:3 - error TS2375: Type '{ id: string; roomId: string; startTime: string;
+  endTime: string; reservedBy: string | undefined; createdAt: string; }' is not assignable to type '
+  ReservationDto' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the
+  target's properties.
+    Types of property 'reservedBy' are incompatible.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+
+  13   return {
+       ~~~~~~
+
+  src/http/routes/reservations.ts:20:11 - error TS2322: Type 'string | undefined' is not assignable to type
+  'string'.
+    Type 'undefined' is not assignable to type 'string'.
+
+  20           roomId: req.params.roomId,
+               ~~~~~~
+
+    src/services/reservationService.ts:14:3
+      14   roomId: string;
+           ~~~~~~
+      The expected type comes from property 'roomId' which is declared here on type 'CreateReservationInput'
+
+  src/http/routes/reservations.ts:44:11 - error TS2345: Argument of type 'string | undefined' is not assignable
+  to parameter of type 'string'.
+    Type 'undefined' is not assignable to type 'string'.
+
+  44           req.params.roomId,
+               ~~~~~~~~~~~~~~~~~
+
+  src/services/reservationService.ts:67:11 - error TS2375: Type '{ id:
+  `${string}-${string}-${string}-${string}-${string}`; roomId: string; startMs: number; endMs: number;
+  reservedBy: string | undefined; cre
+  atedAtMs: number; }' is not assignable to type 'Reservation' with 'exactOptionalPropertyTypes: true'.
+  Consider adding 'undefined' to the types of the target's properties.
+    Types of property 'reservedBy' are incompatible.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+
+  67     const reservation: Reservation = {
+               ~~~~~~~~~~~
+
+
+  Found 4 errors in 3 files.
+
+  Errors  Files
+       1  src/http/dto/reservationDto.ts:13
+       2  src/http/routes/reservations.ts:20
+       1  src/services/reservationService.ts:67
+
+
+• I fixed the exactOptionalPropertyTypes errors by only setting reservedBy when it’s actually defined and by
+  validating roomId params so they’re definitely strings.
+
+  Changes:
+
+  - src/http/dto/reservationDto.ts omits reservedBy when undefined.
+  - src/services/reservationService.ts omits reservedBy when undefined.
+  - src/http/routes/reservations.ts validates roomId and builds input without reservedBy unless provided.
+
+  Next step: rerun npm run build. If you want, I can add a small param-validation middleware so the route
+  handlers stay even slimmer.

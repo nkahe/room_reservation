@@ -69,7 +69,9 @@ export class ReservationService {
       roomId: input.roomId,
       startMs,
       endMs,
-      reservedBy: input.reservedBy,
+      ...(input.reservedBy !== undefined
+        ? { reservedBy: input.reservedBy }
+        : {}),
       createdAtMs: nowMs,
     };
 

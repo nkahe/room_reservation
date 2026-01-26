@@ -15,7 +15,9 @@ export function toReservationDto(reservation: Reservation): ReservationDto {
     roomId: reservation.roomId,
     startTime: new Date(reservation.startMs).toISOString(),
     endTime: new Date(reservation.endMs).toISOString(),
-    reservedBy: reservation.reservedBy,
+    ...(reservation.reservedBy !== undefined
+      ? { reservedBy: reservation.reservedBy }
+      : {}),
     createdAt: new Date(reservation.createdAtMs).toISOString(),
   };
 }
