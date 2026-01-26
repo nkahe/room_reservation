@@ -5659,3 +5659,23 @@ issue.
   Assumptions made:
 
   - None.
+
+
+ README.md contains examples of API endpoints. Make API documentation more precise by including what the datatypes are
+  and if anything is optional. Read implementation files. Be sure information is correct. Don't make assumptions. Only
+  edit README.md.
+
+
+• Edited README.md (+59 -1)
+     53
+
+
+─ Worked for 3s ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• Updated the API docs in README.md with precise datatypes and required/optional fields based on current implementation.
+
+  Files changed:
+
+  - README.md
+
+  No tests run (docs-only change).

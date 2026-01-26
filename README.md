@@ -1,6 +1,6 @@
-# Meeting Room Reservation API (TypeScript + Express)
+# Meeting Room Reservation API
 
-A small REST API for reserving meeting rooms with an in-memory store, built as a job assignment.
+A small REST API for reserving meeting rooms.
 
 ## Technologies
 
@@ -51,11 +51,19 @@ All errors return JSON:
 }
 ```
 
+Types:
+- `error.code`: string
+- `error.message`: string
+- `error.details`: object (may be empty)
+
 ### Endpoints
 
 #### Create reservation
 
 `POST /rooms/:roomId/reservations`
+
+Path params:
+- `roomId`: string (required)
 
 Body:
 ```json
@@ -66,9 +74,34 @@ Body:
 }
 ```
 
+Body types:
+- `startTime`: string (required, ISO 8601)
+- `endTime`: string (required, ISO 8601)
+- `reservedBy`: string (required)
+
 Success:
 -   201 Created
 -   returns the created reservation
+
+Response body (Reservation DTO):
+```json
+{
+  "id": "string",
+  "roomId": "string",
+  "startTime": "2026-01-21T10:00:00.000Z",
+  "endTime": "2026-01-21T11:00:00.000Z",
+  "reservedBy": "string",
+  "createdAt": "2026-01-20T12:34:56.000Z"
+}
+```
+
+Response types:
+- `id`: string
+- `roomId`: string
+- `startTime`: string (ISO 8601)
+- `endTime`: string (ISO 8601)
+- `reservedBy`: string
+- `createdAt`: string (ISO 8601)
     
 Errors:
 -   400 invalid input (missing fields, invalid timestamps, start>=end)
@@ -80,15 +113,40 @@ Errors:
 
 `GET /rooms/:roomId/reservations?from=...&to=...`
 
+Path params:
+- `roomId`: string (required)
+
+Query params:
+- `from`: string (optional, ISO 8601)
+- `to`: string (optional, ISO 8601)
+
 -   Results are sorted by `startTime` ascending.
 -   Optional filters:
     -   `from`: include reservations where `endTime > from`
     -   `to`: include reservations where `startTime < to`
-        
+
+Response body:
+```json
+{
+  "roomId": "string",
+  "reservations": [ /* Reservation DTO array */ ]
+}
+```
+
+Response types:
+- `roomId`: string
+- `reservations`: array of Reservation DTO
+
+Errors:
+- 400 invalid `from`/`to`
+- 404 unknown room
 
 #### Cancel reservation
 
 `DELETE /reservations/:id`
+
+Path params:
+- `id`: string (required)
 
 -   204 No Content on success
 -   404 if id not found
