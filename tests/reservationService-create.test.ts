@@ -29,13 +29,13 @@ describe("ReservationService.createReservation", () => {
       roomId: "alpha",
       startTime,
       endTime,
-      reservedBy: "henri",
+      reservedBy: "Alice",
     });
 
     expect(reservation.roomId).toBe("alpha");
     expect(reservation.startMs).toBe(Date.parse(startTime));
     expect(reservation.endMs).toBe(Date.parse(endTime));
-    expect(reservation.reservedBy).toBe("henri");
+    expect(reservation.reservedBy).toBe("Alice");
     expect(reservation.createdAtMs).toBe(nowMs);
     expect(reservation.id).toBeTypeOf("string");
     expect(repo.getById(reservation.id)).toEqual(reservation);
@@ -50,6 +50,7 @@ describe("ReservationService.createReservation", () => {
         roomId: "omega",
         startTime,
         endTime,
+        reservedBy: "Alice",
       })
     ).toThrow(RoomNotFoundError);
   });
@@ -63,6 +64,7 @@ describe("ReservationService.createReservation", () => {
         roomId: "alpha",
         startTime: "not-a-date",
         endTime,
+        reservedBy: "Alice",
       })
     ).toThrow(ValidationError);
   });
@@ -76,6 +78,7 @@ describe("ReservationService.createReservation", () => {
         roomId: "alpha",
         startTime,
         endTime: startTime,
+        reservedBy: "Alice",
       })
     ).toThrow(ValidationError);
   });
@@ -89,6 +92,24 @@ describe("ReservationService.createReservation", () => {
         roomId: "alpha",
         startTime: "2026-01-19T23:00:00Z",
         endTime: "2026-01-20T01:00:00Z",
+        reservedBy: "Alice",
+      })
+    ).toThrow(ValidationError);
+  });
+
+  it("rejects missing reservedBy", () => {
+    const repo = new InMemoryReservationRepository();
+    const service = new ReservationService(repo, new FakeClock(nowMs));
+
+    expect(() =>
+      service.createReservation({
+        roomId: "alpha",
+        startTime,
+        endTime,
+      } as unknown as {
+        roomId: string;
+        startTime: string;
+        endTime: string;
       })
     ).toThrow(ValidationError);
   });
@@ -101,6 +122,7 @@ describe("ReservationService.createReservation", () => {
       roomId: "alpha",
       startTime,
       endTime,
+      reservedBy: "Alice",
     });
 
     expect(() =>
@@ -108,6 +130,7 @@ describe("ReservationService.createReservation", () => {
         roomId: "alpha",
         startTime: "2026-01-21T10:30:00Z",
         endTime: "2026-01-21T11:30:00Z",
+        reservedBy: "Alice",
       })
     ).toThrow(OverlapError);
   });
@@ -120,6 +143,7 @@ describe("ReservationService.createReservation", () => {
       roomId: "alpha",
       startTime,
       endTime,
+      reservedBy: "Alice",
     });
 
     expect(() =>
@@ -127,6 +151,7 @@ describe("ReservationService.createReservation", () => {
         roomId: "alpha",
         startTime: endTime,
         endTime: "2026-01-21T12:00:00Z",
+        reservedBy: "Alice",
       })
     ).not.toThrow();
   });

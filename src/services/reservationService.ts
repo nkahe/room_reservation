@@ -14,7 +14,7 @@ export interface CreateReservationInput {
   roomId: string;
   startTime: string;
   endTime: string;
-  reservedBy?: string;
+  reservedBy: string;
 }
 
 export interface ListReservationsFilters {
@@ -43,6 +43,10 @@ export class ReservationService {
       throw new RoomNotFoundError("room not found", { roomId: input.roomId });
     }
 
+    if (typeof input.reservedBy !== "string") {
+      throw new ValidationError("reservedBy is required", { field: "reservedBy" });
+    }
+
     const startMs = parseIsoToMs(input.startTime, "startTime");
     const endMs = parseIsoToMs(input.endTime, "endTime");
 
@@ -69,9 +73,7 @@ export class ReservationService {
       roomId: input.roomId,
       startMs,
       endMs,
-      ...(input.reservedBy !== undefined
-        ? { reservedBy: input.reservedBy }
-        : {}),
+      reservedBy: input.reservedBy,
       createdAtMs: nowMs,
     };
 

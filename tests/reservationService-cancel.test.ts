@@ -22,6 +22,7 @@ describe("ReservationService.cancelReservation", () => {
       roomId: "alpha",
       startTime: "2026-01-21T10:00:00Z",
       endTime: "2026-01-21T11:00:00Z",
+      reservedBy: "Alice",
     });
 
     expect(repo.getById(reservation.id)).toEqual(reservation);

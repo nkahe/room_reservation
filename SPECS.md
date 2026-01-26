@@ -61,7 +61,7 @@ A new reservation conflicts with an existing reservation if:
 - `roomId: string`
 - `startMs: number`
 - `endMs: number`
-- `reservedBy?: string`
+- `reservedBy: string`
 - `createdAtMs: number`
 
 ### Reservation DTO (API)
@@ -70,7 +70,7 @@ Response object fields:
 - `roomId: string`
 - `startTime: string` (ISO 8601)
 - `endTime: string` (ISO 8601)
-- `reservedBy?: string`
+- `reservedBy: string`
 - `createdAt: string` (ISO 8601)
 
 ## API Endpoints

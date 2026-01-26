@@ -4,7 +4,7 @@ import { ValidationError } from "../../domain/errors";
 export interface CreateReservationBody {
   startTime: string;
   endTime: string;
-  reservedBy?: string;
+  reservedBy: string;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -27,8 +27,8 @@ export const validateCreateReservationBody: RequestHandler = (req, _res, next) =
       throw new ValidationError("endTime is required", { field: "endTime" });
     }
 
-    if (reservedBy !== undefined && typeof reservedBy !== "string") {
-      throw new ValidationError("reservedBy must be a string", {
+    if (typeof reservedBy !== "string") {
+      throw new ValidationError("reservedBy is required", {
         field: "reservedBy",
       });
     }

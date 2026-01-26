@@ -3,6 +3,6 @@ export interface Reservation {
   roomId: string;
   startMs: number;
   endMs: number;
-  reservedBy?: string;
+  reservedBy: string;
   createdAtMs: number;
 }

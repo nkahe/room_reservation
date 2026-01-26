@@ -22,16 +22,19 @@ describe("ReservationService.listReservationsForRoom", () => {
       roomId: "alpha",
       startTime: "2026-01-21T11:00:00Z",
       endTime: "2026-01-21T12:00:00Z",
+      reservedBy: "Alice",
     });
     service.createReservation({
       roomId: "alpha",
       startTime: "2026-01-21T09:00:00Z",
       endTime: "2026-01-21T10:00:00Z",
+      reservedBy: "Alice",
     });
     service.createReservation({
       roomId: "alpha",
       startTime: "2026-01-21T10:00:00Z",
       endTime: "2026-01-21T11:00:00Z",
+      reservedBy: "Alice",
     });
 
     const list = service.listReservationsForRoom("alpha");
@@ -50,11 +53,13 @@ describe("ReservationService.listReservationsForRoom", () => {
       roomId: "alpha",
       startTime: "2026-01-21T09:00:00Z",
       endTime: "2026-01-21T10:00:00Z",
+      reservedBy: "Alice",
     });
     service.createReservation({
       roomId: "alpha",
       startTime: "2026-01-21T10:00:00Z",
       endTime: "2026-01-21T11:00:00Z",
+      reservedBy: "Alice",
     });
 
     const list = service.listReservationsForRoom("alpha", {
@@ -74,11 +79,13 @@ describe("ReservationService.listReservationsForRoom", () => {
       roomId: "alpha",
       startTime: "2026-01-21T09:00:00Z",
       endTime: "2026-01-21T10:00:00Z",
+      reservedBy: "Alice",
     });
     service.createReservation({
       roomId: "alpha",
       startTime: "2026-01-21T10:00:00Z",
       endTime: "2026-01-21T11:00:00Z",
+      reservedBy: "Alice",
     });
 
     const list = service.listReservationsForRoom("alpha", {

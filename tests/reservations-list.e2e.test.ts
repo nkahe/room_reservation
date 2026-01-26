@@ -19,14 +19,17 @@ describe("GET /rooms/:roomId/reservations", () => {
       await request(server).post("/rooms/alpha/reservations").send({
         startTime: "2026-02-03T11:00:00Z",
         endTime: "2026-02-03T12:00:00Z",
+        reservedBy: "Alice",
       });
       await request(server).post("/rooms/alpha/reservations").send({
         startTime: "2026-02-03T09:00:00Z",
         endTime: "2026-02-03T10:00:00Z",
+        reservedBy: "Alice",
       });
       await request(server).post("/rooms/alpha/reservations").send({
         startTime: "2026-02-03T10:00:00Z",
         endTime: "2026-02-03T11:00:00Z",
+        reservedBy: "Alice",
       });
 
       const response = await request(server).get(
@@ -48,14 +51,17 @@ describe("GET /rooms/:roomId/reservations", () => {
       await request(server).post("/rooms/alpha/reservations").send({
         startTime: "2026-02-03T09:00:00Z",
         endTime: "2026-02-03T10:00:00Z",
+        reservedBy: "Alice",
       });
       await request(server).post("/rooms/alpha/reservations").send({
         startTime: "2026-02-03T10:00:00Z",
         endTime: "2026-02-03T11:00:00Z",
+        reservedBy: "Alice",
       });
       await request(server).post("/rooms/alpha/reservations").send({
         startTime: "2026-02-03T11:00:00Z",
         endTime: "2026-02-03T12:00:00Z",
+        reservedBy: "Alice",
       });
 
       const response = await request(server).get(

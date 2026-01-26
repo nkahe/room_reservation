@@ -21,6 +21,7 @@ describe("DELETE /reservations/:id", () => {
         .send({
           startTime: "2026-02-05T10:00:00Z",
           endTime: "2026-02-05T11:00:00Z",
+          reservedBy: "Alice",
         });
 
       const reservationId = createResponse.body.id as string;

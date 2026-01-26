@@ -5,7 +5,7 @@ export interface ReservationDto {
   roomId: string;
   startTime: string;
   endTime: string;
-  reservedBy?: string;
+  reservedBy: string;
   createdAt: string;
 }
 
@@ -15,9 +15,7 @@ export function toReservationDto(reservation: Reservation): ReservationDto {
     roomId: reservation.roomId,
     startTime: new Date(reservation.startMs).toISOString(),
     endTime: new Date(reservation.endMs).toISOString(),
-    ...(reservation.reservedBy !== undefined
-      ? { reservedBy: reservation.reservedBy }
-      : {}),
+    reservedBy: reservation.reservedBy,
     createdAt: new Date(reservation.createdAtMs).toISOString(),
   };
 }

@@ -23,14 +23,14 @@ describe("POST /rooms/:roomId/reservations", () => {
     await withServer(async (server) => {
       const response = await request(server)
         .post("/rooms/alpha/reservations")
-        .send({ startTime, endTime, reservedBy: "henri" });
+        .send({ startTime, endTime, reservedBy: "Alice" });
 
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({
         roomId: "alpha",
         startTime: startTimeIso,
         endTime: endTimeIso,
-        reservedBy: "henri",
+        reservedBy: "Alice",
       });
       expect(response.body.id).toBeTypeOf("string");
       expect(response.body.createdAt).toBeTypeOf("string");
@@ -50,11 +50,24 @@ describe("POST /rooms/:roomId/reservations", () => {
     });
   });
 
+  it("returns 400 when reservedBy is missing", async () => {
+    await withServer(async (server) => {
+      const response = await request(server)
+        .post("/rooms/alpha/reservations")
+        .send({ startTime, endTime });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({
+        error: { code: "VALIDATION_ERROR" },
+      });
+    });
+  });
+
   it("returns 404 for unknown room", async () => {
     await withServer(async (server) => {
       const response = await request(server)
         .post("/rooms/omega/reservations")
-        .send({ startTime, endTime });
+        .send({ startTime, endTime, reservedBy: "Alice" });
 
       expect(response.status).toBe(404);
       expect(response.body).toMatchObject({
@@ -67,13 +80,14 @@ describe("POST /rooms/:roomId/reservations", () => {
     await withServer(async (server) => {
       await request(server)
         .post("/rooms/alpha/reservations")
-        .send({ startTime, endTime });
+        .send({ startTime, endTime, reservedBy: "Alice" });
 
       const response = await request(server)
         .post("/rooms/alpha/reservations")
         .send({
           startTime: "2026-02-01T10:30:00Z",
           endTime: "2026-02-01T11:30:00Z",
+          reservedBy: "Alice",
         });
 
       expect(response.status).toBe(409);

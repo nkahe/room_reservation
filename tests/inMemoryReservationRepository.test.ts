@@ -11,7 +11,7 @@ function buildReservation(
     startMs: overrides.startMs,
     endMs: overrides.endMs,
     createdAtMs: overrides.createdAtMs ?? 0,
-    reservedBy: overrides.reservedBy,
+    reservedBy: overrides.reservedBy ?? "Alice",
   };
 }
 
