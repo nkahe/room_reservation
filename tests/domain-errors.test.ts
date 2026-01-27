@@ -4,6 +4,7 @@ import {
   ValidationError,
   RoomNotFoundError,
   ReservationNotFoundError,
+  RouteNotFoundError,
   OverlapError,
 } from "../src/domain/errors";
 
@@ -32,6 +33,15 @@ describe("domain errors", () => {
       throw new ReservationNotFoundError("reservation missing");
     } catch (err) {
       expect(err).toBeInstanceOf(ReservationNotFoundError);
+      expect(err).toBeInstanceOf(DomainError);
+    }
+  });
+
+  it("route not found error can be caught by instance checks", () => {
+    try {
+      throw new RouteNotFoundError("route missing");
+    } catch (err) {
+      expect(err).toBeInstanceOf(RouteNotFoundError);
       expect(err).toBeInstanceOf(DomainError);
     }
   });

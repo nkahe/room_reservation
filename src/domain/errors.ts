@@ -30,6 +30,12 @@ export class ReservationNotFoundError extends DomainError {
   }
 }
 
+export class RouteNotFoundError extends DomainError {
+  constructor(message: string, details?: ErrorDetails) {
+    super("ROUTE_NOT_FOUND", message, details);
+  }
+}
+
 export class OverlapError extends DomainError {
   constructor(message: string, details?: ErrorDetails) {
     super("OVERLAP", message, details);

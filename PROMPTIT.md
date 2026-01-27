@@ -5799,3 +5799,132 @@ README.md
 Added a Table of contents section near the top of README.md.
 
 If you want different section order or nested entries under API, tell me what structure you want.
+
+
+GET request to endpoint that isn't defined returns generic HTML<title>Error</title> etc. What would be proper error response?
+
+Express’s default 404 handler returns an HTML error page, which is why you see the <title>Error</title> response. In your API, the “proper” response should match your JSON error format, e.g.:
+
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Route not found"
+  }
+}
+To do that, add a final catch‑all middleware after your routes (but before errorHandler if you want to throw a typed error, or after routes and before errorHandler if you map it there). Example:
+
+app.use((req, _res, next) => {
+  next(new ValidationError("route not found")); // or a NotFoundError if you add one
+});
+or directly:
+
+app.use((_req, res) => {
+  res.status(404).json({
+    error: { code: "NOT_FOUND", message: "Route not found" },
+  });
+});
+If you want, I can wire this into app.ts and add a NotFoundError to keep it consistent with your errorHandler.
+
+
+add error handler to @app.ts for route not found
+
+Edited
+errors.ts
+
+export class RouteNotFoundError extends DomainError {
+  constructor(message: string, details?: ErrorDetails) {
+    super("ROUTE_NOT_FOUND", message, details);
+  }
+}
+
+export class OverlapError extends DomainError {
+Edited
+errorHandler.ts
+        ? 404
+        : err.code === "ROUTE_NOT_FOUND"
+        ? 404
+        : err.code === "OVERLAP"
+Edited
+app.ts
+import { seedReservations } from "./seed/seedReservations";
+import { RouteNotFoundError } from "./domain/errors";
+
+  app.use(createReservationsRouter(reservationService));
+  app.use((req, _res, next) => {
+    next(new RouteNotFoundError("route not found", { path: req.path }));
+  });
+  app.use(errorHandler);
+Added a proper JSON 404 for unknown routes by introducing RouteNotFoundError, mapping it to 404, and wiring a catch‑all middleware.
+
+Changed files:
+
+errors.ts
+errorHandler.ts
+app.ts
+If you want tests for this (e.g., GET /nope returns ROUTE_NOT_FOUND), I can add them.
+
+3 files changed
++12
+-0
+Undo
+
+Review
+app.ts
+errors.ts
+errorHandler.ts
+yes add tests
+
+Created
+routes-not-found.e2e.test.ts
+import { describe, it, expect } from "vitest";
+import { Server } from "http";
+import request from "supertest";
+import { createApp } from "../src/app";
+
+async function withServer<T>(handler: (server: Server) => Promise<T>) {
+  const app = createApp();
+  const server = app.listen(0, "127.0.0.1");
+  try {
+    return await handler(server);
+  } finally {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
+}
+
+describe("unknown routes", () => {
+  it("returns JSON 404 with error envelope", async () => {
+    await withServer(async (server) => {
+      const response = await request(server).get("/not-a-route");
+
+      expect(response.status).toBe(404);
+      expect(response.body).toMatchObject({
+        error: { code: "ROUTE_NOT_FOUND" },
+      });
+    });
+  });
+});
+Edited
+domain-errors.test.ts
+  ReservationNotFoundError,
+  RouteNotFoundError,
+  OverlapError,
+
+  it("route not found error can be caught by instance checks", () => {
+    try {
+      throw new RouteNotFoundError("route missing");
+    } catch (err) {
+      expect(err).toBeInstanceOf(RouteNotFoundError);
+      expect(err).toBeInstanceOf(DomainError);
+    }
+  });
+
+  it("overlap error can be caught by instance checks", () => {
+Added tests for the new route‑not‑found behavior.
+
+Changes:
+
+routes-not-found.e2e.test.ts — verifies JSON 404 with ROUTE_NOT_FOUND.
+domain-errors.test.ts — covers RouteNotFoundError instance checks.
+Run:
+
+npm test

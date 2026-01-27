@@ -6,6 +6,7 @@ import { InMemoryReservationRepository } from "./repositories/inMemoryReservatio
 import { ReservationService } from "./services/reservationService";
 import { SystemClock } from "./services/clock";
 import { seedReservations } from "./seed/seedReservations";
+import { RouteNotFoundError } from "./domain/errors";
 
 export function createApp() {
   const app = express();
@@ -20,6 +21,9 @@ export function createApp() {
 
   app.use(healthRouter);
   app.use(createReservationsRouter(reservationService));
+  app.use((req, _res, next) => {
+    next(new RouteNotFoundError("route not found", { path: req.path }));
+  });
   app.use(errorHandler);
 
   return app;

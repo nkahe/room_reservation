@@ -17,6 +17,8 @@ export function errorHandler(
         ? 400
         : err.code === "ROOM_NOT_FOUND" || err.code === "RESERVATION_NOT_FOUND"
         ? 404
+        : err.code === "ROUTE_NOT_FOUND"
+        ? 404
         : err.code === "OVERLAP"
         ? 409
         : 500;
