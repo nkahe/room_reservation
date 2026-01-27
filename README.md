@@ -36,6 +36,47 @@ Key rules:
 - HTTP layer validates request DTOs; services enforce business rules.
 - Time is abstracted via a `Clock` interface to keep services testable.
 
+## File guide
+
+AI instructions
+- `SPECS.md` — requirements and API contract
+- `CODING_RULES.md` — architecture and coding conventions
+- `PROMPT.md` — General prompt
+- `TASKS.md` — Step by step task plan
+- `CURRENT_TASK.md` — current task and allowed files (source of truth)
+- `PROMPTIT.md`- AI prompts and outputs
+
+Source files in *src* directory
+- `app.ts` — app composition, middleware, routes, and optional seeding
+- `server.ts` — HTTP server bootstrap
+- `config/rooms.ts` — fixed room list and validator
+- `domain/reservation.ts` — Reservation domain type
+- `domain/errors.ts` — domain error classes and codes
+- `services/clock.ts` — time abstraction (`Clock`, `SystemClock`)
+- `services/reservationService.ts` — business rules for create/list/cancel
+- `repositories/reservationRepository.ts` — repository interface
+- `repositories/inMemoryReservationRepository.ts` — in-memory storage
+- `http/routes/health.ts` — health check endpoint
+- `http/routes/reservations.ts` — reservation endpoints
+- `http/middleware/validate.ts` — request validation middleware
+- `http/middleware/errorHandler.ts` — error-to-HTTP mapping
+- `http/dto/reservationDto.ts` — DTO mapping for API responses
+- `seed/seedReservations.ts` — optional dev-only seed data
+
+Tests files under *tests* directory
+- `smoke.test.ts` — tooling sanity check
+- `health.e2e.test.ts` — health endpoint
+- `reservations-create.e2e.test.ts` — create endpoint
+- `reservations-list.e2e.test.ts` — list endpoint + filters
+- `reservations-cancel.e2e.test.ts` — cancel endpoint
+- `reservationService-create.test.ts` — service create rules
+- `reservationService-list.test.ts` — service list rules
+- `reservationService-cancel.test.ts` — service cancel rules
+- `inMemoryReservationRepository.test.ts` — repository behaviors
+- `rooms-config.test.ts` — room config validation
+- `domain-errors.test.ts` — error classes
+- `seed/seed.test.ts` — seed behavior
+
 ## API
 
 ### Error format
