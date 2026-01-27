@@ -93,6 +93,9 @@ export class ReservationService {
       filters.from !== undefined ? parseIsoToMs(filters.from, "from") : undefined;
     const toMs =
       filters.to !== undefined ? parseIsoToMs(filters.to, "to") : undefined;
+    if (fromMs !== undefined && toMs !== undefined && fromMs >= toMs) {
+      throw new ValidationError("from must be before to");
+    }
 
     const reservations = this.repository.listByRoom(roomId);
     const filtered = reservations.filter((reservation) => {

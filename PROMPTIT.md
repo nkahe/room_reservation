@@ -5679,3 +5679,39 @@ issue.
   - README.md
 
   No tests run (docs-only change).
+
+
+explain listing reservations with "from" and "to" parameters. is logic good?
+
+Listing logic in reservationService.ts:
+
+from and to are parsed with Date.parse into ms. Invalid values throw ValidationError.
+It loads all reservations for the room, then filters by overlap with the [from, to) window:
+If from is set, it excludes reservations that end at or before from (reservation.endMs <= fromMs).
+If to is set, it excludes reservations that start at or after to (reservation.startMs >= toMs).
+Anything not excluded overlaps the window and is returned, sorted by startMs.
+So it’s effectively “return reservations that overlap the window,” with a half‑open boundary: end at from is excluded; start at to is excluded.
+
+Is the logic good?
+
+Yes, for “overlap” semantics, this is correct and consistent.
+One potential gap: it doesn’t validate from < to. If a caller passes from >= to, you’ll still get a list (likely empty or odd). If you want strict validation, add a check like you did for startTime/endTime.
+Also note from/to can be any ISO timestamp, including past; that might be fine for listing.
+If you want me to add the validation or adjust boundary rules (inclusive vs exclusive), say the desired behavior and I can update it.
+
+Changed to Agent mode
+
+reservationService.ts
+84
+add validation that if both from and to parameters are provided, "from" needs to be less than "to".
+
+Edited
+reservationService.ts
+      filters.to !== undefined ? parseIsoToMs(filters.to, "to") : undefined;
+    if (fromMs !== undefined && toMs !== undefined && fromMs >= toMs) {
+      throw new ValidationError("from must be before to");
+    }
+
+Added validation in reservationService.ts to reject from >= to when both are provided, mirroring the create-time ordering check.
+
+If you want a different error message or field metadata on the ValidationError, tell me the format and I’ll adjust.
