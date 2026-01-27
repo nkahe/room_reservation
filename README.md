@@ -2,6 +2,17 @@
 
 A small REST API for reserving meeting rooms.
 
+## Table of contents
+
+- [Technologies](#technologies)
+- [Assumptions](#assumptions)
+- [Architecture](#architecture)
+- [File guide](#file-guide)
+- [API](#api)
+- [Getting started](#getting-started)
+- [Example curl commands](#example-curl-commands)
+- [Development approach](#development-approach)
+
 ## Technologies
 
 - TypeScript (strict)

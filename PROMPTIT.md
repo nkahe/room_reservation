@@ -5715,3 +5715,87 @@ reservationService.ts
 Added validation in reservationService.ts to reject from >= to when both are provided, mirroring the create-time ordering check.
 
 If you want a different error message or field metadata on the ValidationError, tell me the format and I’ll adjust.
+
+
+add these file descriptions to README.md
+
+Edited
+README.md
+
+## File guide
+
+Top-level:
+- `.gitignore` — ignore lists for deps, build output, logs, env files, editor artifacts, and test output
+- `README.md` — project overview, API docs, and usage
+- `SPECS.md` — requirements and API contract
+- `CODING_RULES.md` — architecture and coding conventions
+- `TASKS.md` — task plan (background)
+- `CURRENT_TASK.md` — current task and allowed files (source of truth)
+- `PROMPT.md` / `PROMPTIT.md` — internal prompts and assignment notes
+- `package.json` / `package-lock.json` — scripts, deps, and lockfile
+- `tsconfig.json` — TypeScript compiler settings
+- `vitest.config.ts` — Vitest configuration
+
+Source:
+- `src/app.ts` — app composition, middleware, routes, and optional seeding
+- `src/server.ts` — HTTP server bootstrap
+- `src/config/rooms.ts` — fixed room list and validator
+- `src/domain/reservation.ts` — Reservation domain type
+- `src/domain/errors.ts` — domain error classes and codes
+- `src/services/clock.ts` — time abstraction (`Clock`, `SystemClock`)
+- `src/services/reservationService.ts` — business rules for create/list/cancel
+- `src/repositories/reservationRepository.ts` — repository interface
+- `src/repositories/inMemoryReservationRepository.ts` — in-memory storage
+- `src/http/routes/health.ts` — health check endpoint
+- `src/http/routes/reservations.ts` — reservation endpoints
+- `src/http/middleware/validate.ts` — request validation middleware
+- `src/http/middleware/errorHandler.ts` — error-to-HTTP mapping
+- `src/http/dto/reservationDto.ts` — DTO mapping for API responses
+- `src/seed/seedReservations.ts` — optional dev-only seed data
+
+Tests:
+- `tests/smoke.test.ts` — tooling sanity check
+- `tests/health.e2e.test.ts` — health endpoint
+- `tests/reservations-create.e2e.test.ts` — create endpoint
+- `tests/reservations-list.e2e.test.ts` — list endpoint + filters
+- `tests/reservations-cancel.e2e.test.ts` — cancel endpoint
+- `tests/reservationService-create.test.ts` — service create rules
+- `tests/reservationService-list.test.ts` — service list rules
+- `tests/reservationService-cancel.test.ts` — service cancel rules
+- `tests/inMemoryReservationRepository.test.ts` — repository behaviors
+- `tests/rooms-config.test.ts` — room config validation
+- `tests/domain-errors.test.ts` — error classes
+- `tests/seed/seed.test.ts` — seed behavior
+
+## API
+-   `CODING_RULES.md` for architecture and practices
+-   `TASKS.md` for step-by-step implementation plan
+-   `TASKS.md` for step-by-step implementation plan
+Added a File guide section to README.md with concise descriptions for the top-level, source, and test files.
+
+Next steps if you want:
+
+Tighten wording or reorder by importance.
+Add links for quick navigation (e.g., app.ts, tests/...).
+
+
+Add table of contest to readme
+
+Edited
+README.md
+
+## Table of contents
+
+- [Technologies](#technologies)
+- [Assumptions](#assumptions)
+- [Architecture](#architecture)
+- [File guide](#file-guide)
+- [API](#api)
+- [Getting started](#getting-started)
+- [Example curl commands](#example-curl-commands)
+- [Development approach](#development-approach)
+
+## Technologies
+Added a Table of contents section near the top of README.md.
+
+If you want different section order or nested entries under API, tell me what structure you want.
