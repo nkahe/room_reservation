@@ -6122,3 +6122,46 @@ reservationService.ts
 Tests
 
 npm test (required escalated permissions to allow local listening sockets for E2E tests)
+
+
+Fix issue you mentioned:
+
+"Seed data does not span multiple rooms as required by the spec (“seed 3–6 reservations across multiple rooms”). All seeds use a single room ID, so this violates the spec even though tests pass."
+
+Make 2 more seed data reservations for another room.  Read SPECS.md . and  make sure to follow rules.
+Do NOT refactor unrelated code.
+Keep changes minimal, focused, and readable.
+If requirements are unclear, STOP and ask instead of guessing.
+Ensure npm test passes before finishing.
+
+Edited
+seedReservations.ts
+  const firstSeedRoomId = ROOMS[5];
+  const secondSeedRoomId = ROOMS[1];
+  const seeds = [
+    },
+    {
+      roomId: secondSeedRoomId,
+      startTime: new Date(nowMs + 60 * 60 * 1000).toISOString(),
+      endTime: new Date(nowMs + 2 * 60 * 60 * 1000).toISOString(),
+      reservedBy: "seed",
+    },
+    {
+      roomId: secondSeedRoomId,
+      startTime: new Date(nowMs + 2 * 60 * 60 * 1000).toISOString(),
+      endTime: new Date(nowMs + 3 * 60 * 60 * 1000).toISOString(),
+      reservedBy: "seed",
+    },
+  ];
+
+Added two seed reservations in a second room to satisfy the spec’s “multiple rooms” requirement while keeping times future and non-overlapping per room. Updated seedReservations.ts only.
+
+Files changed or added
+
+seedReservations.ts
+Tests
+
+npm test (required escalated permissions to allow local listening sockets for E2E tests)
+Suggestions
+
+Review the seed room choices if you want specific rooms rather than ROOMS[5] and ROOMS[1].

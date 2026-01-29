@@ -15,6 +15,7 @@ export function seedReservations(
 
   const nowMs = clock.nowMs();
   const firstSeedRoomId = ROOMS[5];
+  const secondSeedRoomId = ROOMS[1];
   const seeds = [
     {
       roomId: firstSeedRoomId,
@@ -32,6 +33,18 @@ export function seedReservations(
       roomId: firstSeedRoomId,
       startTime: new Date(nowMs + 3 * 60 * 60 * 1000).toISOString(),
       endTime: new Date(nowMs + 4 * 60 * 60 * 1000).toISOString(),
+      reservedBy: "seed",
+    },
+    {
+      roomId: secondSeedRoomId,
+      startTime: new Date(nowMs + 60 * 60 * 1000).toISOString(),
+      endTime: new Date(nowMs + 2 * 60 * 60 * 1000).toISOString(),
+      reservedBy: "seed",
+    },
+    {
+      roomId: secondSeedRoomId,
+      startTime: new Date(nowMs + 2 * 60 * 60 * 1000).toISOString(),
+      endTime: new Date(nowMs + 3 * 60 * 60 * 1000).toISOString(),
       reservedBy: "seed",
     },
   ];
