@@ -110,6 +110,7 @@ Query params (optional):
 
 - from (ISO 8601): include reservations that end after from
 - to (ISO 8601): include reservations that start before to
+- `from` needs to be before `to`.
 
 Filtering logic:
 

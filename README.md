@@ -172,6 +172,7 @@ Query params:
 - `from`: string (optional, ISO 8601)
 - `to`: string (optional, ISO 8601)
 
+-   `from` needs to be before `to`.
 -   Results are sorted by `startTime` ascending.
 -   Optional filters:
     -   `from`: include reservations where `endTime > from`
