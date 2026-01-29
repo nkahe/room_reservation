@@ -1,5 +1,3 @@
-
-
 Create meeting room reservation interface (API).
 
 The service must offer users the following functions:
@@ -10,11 +8,9 @@ The service must offer users the following functions:
 - Make 3 reservations by default as dummy data.
 
 Business rules:
-- Reservations cannot overlap (two people cannot reserve the same room
-at the same time).
+- Reservations cannot overlap (two people cannot reserve the same room at the same time).
 - Reservations cannot be set in the past.
 - The start time must be before the end time.
-
 - Use minimum reservation time of 15 minutes.
 
 
@@ -25,7 +21,25 @@ Technical constraints:
 
 ----
 
-programming excercise assignment is below. if I ask you to make implementation, what  open questions would be useful for you to know? and additional instructions that would help you? Create meeting room reservation interface (API). The service must offer users the following functions: - Creating a reservation: Reserve a room for a specific time period. - Canceling a reservation: Remove a reservation. - Viewing reservations: List all reservations for a specific room. Business rules: - Reservations cannot overlap (two people cannot reserve the same room at the same time). - Reservations cannot be set in the past. - The start time must be before the end time. Technical constraints: - use typescript, in-memory database - Must have proper error handling. - Make few reservations by default as dummy data.
+Programming exercise assignment is below. If I ask you to make implementation,
+what open questions would be useful for you to know, and what additional
+instructions would help you?
+
+Create meeting room reservation interface (API). The service must offer users
+the following functions:
+- Creating a reservation: Reserve a room for a specific time period.
+- Canceling a reservation: Remove a reservation.
+- Viewing reservations: List all reservations for a specific room.
+
+Business rules:
+- Reservations cannot overlap (two people cannot reserve the same room at the same time).
+- Reservations cannot be set in the past.
+- The start time must be before the end time.
+
+Technical constraints:
+- Use Typescript, in-memory database.
+- Must have proper error handling.
+- Make few reservations by default as dummy data.
 
 ###### ChatGPT said:
 
@@ -162,10 +176,11 @@ If you just tell me “assume sensible defaults”, I’ll implement with these 
 
 If you paste any course-specific requirements (framework, status codes, required routes, whether rooms must be created), I’ll align the implementation to those.
 
+This is preliminary assignment for a job. No more specific instructions are
+given but I'm allowed to make assumptions. What would be good default
+assumptions?
 
-this is preliminary assignment for a job. no more specific instructions are given but I'm allowed to make assumptions. what would be good default assumptions
-
-###### ChatGPT said:
+###### ChatGPT said
 
 - **Scope:** single-process REST API, no auth, no persistence (memory only). Keep it small, readable, and easy to run.
 
@@ -6165,3 +6180,65 @@ npm test (required escalated permissions to allow local listening sockets for E2
 Suggestions
 
 Review the seed room choices if you want specific rooms rather than ROOMS[5] and ROOMS[1].
+
+
+markdown parsiing gets broken in PROMPTIT.md . fix markdown syntax in that file.
+
+Edited
+PROMPTIT.md
+
+
+Create meeting room reservation interface (API).
+Business rules:
+- Reservations cannot overlap (two people cannot reserve the same room
+at the same time).
+- Reservations cannot overlap (two people cannot reserve the same room at the same time).
+- Reservations cannot be set in the past.
+- The start time must be before the end time.
+
+- Use minimum reservation time of 15 minutes.
+
+programming excercise assignment is below. if I ask you to make implementation, what  open questions would be useful for you to know? and additional instructions that would help you? Create meeting room reservation interface (API). The service must offer users the following functions: - Creating a reservation: Reserve a room for a specific time period. - Canceling a reservation: Remove a reservation. - Viewing reservations: List all reservations for a specific room. Business rules: - Reservations cannot overlap (two people cannot reserve the same room at the same time). - Reservations cannot be set in the past. - The start time must be before the end time. Technical constraints: - use typescript, in-memory database - Must have proper error handling. - Make few reservations by default as dummy data.
+Programming exercise assignment is below. If I ask you to make implementation,
+what open questions would be useful for you to know, and what additional
+instructions would help you?
+
+Create meeting room reservation interface (API). The service must offer users
+the following functions:
+- Creating a reservation: Reserve a room for a specific time period.
+- Canceling a reservation: Remove a reservation.
+- Viewing reservations: List all reservations for a specific room.
+
+Business rules:
+- Reservations cannot overlap (two people cannot reserve the same room at the same time).
+- Reservations cannot be set in the past.
+- The start time must be before the end time.
+
+Technical constraints:
+- Use Typescript, in-memory database.
+- Must have proper error handling.
+- Make few reservations by default as dummy data.
+
+Edited
+PROMPTIT.md
+
+
+this is preliminary assignment for a job. no more specific instructions are given but I'm allowed to make assumptions. what would be good default assumptions
+This is preliminary assignment for a job. No more specific instructions are
+given but I'm allowed to make assumptions. What would be good default
+assumptions?
+
+###### ChatGPT said:
+###### ChatGPT said
+
+Fixed the broken Markdown by reflowing the long inline paragraph into proper sections and lists, and by removing the stray line break inside the “cannot overlap” bullet so list parsing stays intact. Updated PROMPTIT.md only.
+
+Files changed or added
+
+PROMPTIT.md
+Tests
+
+Not run (markdown-only changes)
+Suggestions
+
+If you want, I can also normalize the remaining “###### ChatGPT said:” headings for consistent formatting.
