@@ -1271,6 +1271,7 @@ All errors return JSON:
     "details": {}
   }
 }
+```
 
 Endpoints
 Create reservation
@@ -1279,12 +1280,14 @@ POST /rooms/:roomId/reservations
 
 Body:
 
+```json
+{
 {
   "startTime": "2026-01-21T10:00:00Z",
   "endTime": "2026-01-21T11:00:00Z",
   "reservedBy": "Ada"
 }
-
+```
 
 Success:
 
@@ -2495,14 +2498,6 @@ Implement reservation creation with all business rules enforced.
 
 **Overlap rule (from SPEC)**
 
-╭─────────────────────────────────────────────╮
-│ >_ OpenAI Codex (v0.88.0)                   │
-│                                             │
-│ model:     gpt-5.2-codex   /model to change │
-│ directory: ~/projects/room_reservation_API    │
-╰─────────────────────────────────────────────╯
-
-  Tip: Use /mcp to list configured MCP tools.
 
 
 › Read PROMPT.md and CURRENT_TASK.md now.
