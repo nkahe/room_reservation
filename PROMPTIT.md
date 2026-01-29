@@ -5928,3 +5928,197 @@ domain-errors.test.ts — covers RouteNotFoundError instance checks.
 Run:
 
 npm test
+
+
+why is there this Clock interface used?
+
+Read clock.ts
+The Clock interface is a seam for time. It lets the code depend on “something that can provide the current time” instead of hard‑coding Date.now(). That makes it easy to swap in a fake clock in tests and keep business logic deterministic, while SystemClock is the real production implementation.
+
+If you want, point me to where Clock is consumed (likely in reservationService.ts) and I can explain how it affects that logic.
+
+
+in this application architecture doesn't reservation.ts handle both routes layer and controller layer?
+
+Read reservation.ts
+No — reservation.ts is just a domain model definition (a TypeScript interface). It doesn’t handle routes or controllers at all. Routes live under src/http/routes/..., controllers/services live under src/services/... (or similar), and the domain types are shared across layers.
+
+If you want, point me to the file you think is acting as a controller and I can map the layers in this codebase.
+
+
+reservations.ts
+41
+I mean this file
+
+Read reservations.ts
+Got it — this reservations.ts file is the route layer, but it also contains controller-like logic (request parsing, validation checks, calling the service, shaping the response, and error handling). So it’s combining responsibilities that some architectures would split into separate “routes” and “controllers”.
+
+What it does:
+
+Route wiring: delete(...)
+Controller work: read req, validate presence, build input DTOs, call reservationService, format the response, handle errors
+So your intuition is right: this file plays both roles. If you wanted stricter separation, you’d typically move each handler body into a controller module and keep this file as pure routing glue.
+
+
+
+when I run npm run test, I get:
+
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.
+
+details:
+Vite CJS Node API deprecated
+
+The CJS build of Vite's Node API is deprecated and will be removed in Vite 6. See the GitHub discussion for more context. You should update your files or frameworks to import the ESM build of Vite instead.
+
+In a basic Vite project, make sure:
+
+    The vite.config.js file content is using the ESM syntax.
+    The closest package.json file has "type": "module", or use the .mjs/.mts extension, e.g. vite.config.mjs or vite.config.mts.
+
+For other projects, there are a few general approaches:
+
+    Configure ESM as default, opt-in to CJS if needed: Add "type": "module" in the project package.json. All *.js files are now interpreted as ESM and need to use the ESM syntax. You can rename a file with the .cjs extension to keep using CJS instead.
+    Keep CJS as default, opt-in to ESM if needed: If the project package.json does not have "type": "module", all *.js files are interpreted as CJS. You can rename a file with the .mjs extension to use ESM instead.
+    Dynamically import Vite: If you need to keep using CJS, you can dynamically import Vite using import('vite') instead. This requires your code to be written in an async context, but should still be manageable as Vite's API is mostly asynchronous.
+
+If you're unsure where the warning is coming from, you can run your script with the VITE_CJS_TRACE=true flag to log the stack trace:
+
+VITE_CJS_TRACE=true vite dev
+
+If you'd like to temporarily ignore the warning, you can run your script with the VITE_CJS_IGNORE_WARNING=true flag:
+
+VITE_CJS_IGNORE_WARNING=true vite dev
+
+Note that postcss config files do not support ESM + TypeScript (.mts or .ts in "type": "module") yet. If you have postcss configs with .ts and added "type": "module" to package.json, you'll also need to rename the postcss config to use .cts.
+
+That warning is coming from Vitest using Vite’s CJS Node API because this project is configured as CommonJS ("type": "commonjs" and tsconfig.json uses "module": "CommonJS"). It’s just a deprecation notice; tests still run. Vite is warning that the CJS API will be removed in Vite 6.
+
+If you want to address it, you have a few options:
+
+Leave as-is and ignore the warning (no functional impact right now).
+Suppress it for tests by setting VITE_CJS_IGNORE_WARNING=1 in the test script.
+Move the project to ESM (change package.json "type": "module" and update TS config/build accordingly).
+If you want, tell me which route you prefer and I can make the change.
+
+what other changes needs to be made than that package.json change?
+
+Do you mean if we switch the project to ESM (i.e., add "type": "module")? If yes, typical follow‑ups are:
+
+Update tsconfig.json to emit ESM ("module": "ES2022" or "NodeNext", plus "moduleResolution": "NodeNext").
+Ensure vitest.config.ts stays ESM (it already is).
+Update any require/module.exports to import/export (I don’t see any in this repo).
+Adjust runtime entry points if needed (start/build still fine, but server.js must be ESM output).
+If you meant a different fix (like suppressing the warning), tell me which route you want and I’ll be precise.
+
+make needed changes to switch to ESM. done when 'npm test' passes errors or warnings.
+
+Edited
+package.json
+  "private": true,
+  "type": "commonjs",
+  "type": "module",
+  "main": "dist/server.js",
+Edited
+tsconfig.json
+    "lib": ["ES2022"],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": "src",
+Rejected
+reservationRepository.ts
+import { Reservation } from "../domain/reservation";
+import { Reservation } from "../domain/reservation.js";
+
+2 files changed
++3
+-3
+Undo
+
+Review
+package.json
+tsconfig.json
+that file is typescript, not js
+
+You’re right — it’s a .ts file.
+In TypeScript ESM with module: "NodeNext", the import specifiers must still use .js extensions because that’s what the emitted JS file will be at runtime. So you’ll see reservation.js" inside .ts files. TypeScript understands that and maps it back to the .ts source.
+
+Right now I already switched:
+
+package.json to "type": "module"
+tsconfig.json to NodeNext
+Next step to make tests pass is updating all relative imports to include .js. If you want me to proceed with those edits, say “go ahead” and I’ll update the imports and run npm test.
+
+suppress the warning with VITE_CJS_IGNORE_WARNING=1 for now
+
+Edited
+package.json
+    "start": "node dist/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test": "VITE_CJS_IGNORE_WARNING=1 vitest run",
+    "test:watch": "VITE_CJS_IGNORE_WARNING=1 vitest",
+    "lint": "eslint .",
+Applied the warning suppression to the test scripts in package.json.
+
+If you want this to also apply to npm run dev, say the word and I’ll add it there too
+
+
+review code of this project. find possible bugs or bad practices.
+Read SPECS.md, CODING_RULES.md, and TASKS.md for overall context.
+
+Keep changes minimal, focused, and readable.
+Ensure npm test passes before finishing.
+Output format:
+- Short summary of what was implemented
+- List of files changed or added
+
+
+
+Findings (ordered by severity)
+
+Medium: Seed data does not span multiple rooms as required by the spec (“seed 3–6 reservations across multiple rooms”). All seeds use a single room ID, so this violates the spec even though tests pass. seedReservations.ts (line 17)
+Medium: ISO 8601 validation relies on Date.parse, which accepts non-ISO formats in many runtimes (e.g., locale-specific strings). This can admit inputs that the spec says should be rejected. reservationService.ts (line 25)
+Low: reservedBy is treated as required in both HTTP validation and service logic, but the spec describes it as optional. This is a behavioral mismatch with the written spec (even though tests expect required). validate.ts (line 30), reservationService.ts (line 46)
+Low: from >= to is rejected in listing, but the spec doesn’t require that validation; it could be an unexpected 400 for callers who expect empty results instead. reservationService.ts (line 96)
+Open questions / assumptions
+
+I assumed tests are the source of truth for reservedBy being required; if you want to align with the spec, we’d loosen validation and service checks.
+No code changes implemented; review only.
+
+Files changed or added
+
+None
+Tests
+
+npm test (passed, required escalated permissions for Vitest cache/temp writes)
+
+reservationService.ts
+25
+fix date validation issue you mentioned
+
+Edited
+reservationService.ts
+
+const ISO_8601_REGEX =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|[+-]\d{2}:\d{2})$/;
+
+function parseIsoToMs(value: string, field: string): number {
+  if (!ISO_8601_REGEX.test(value)) {
+    throw new ValidationError(`${field} must be a valid ISO 8601 timestamp`, {
+      field,
+    });
+  }
+
+  const parsed = Date.parse(value);
+
+
+Tightened ISO 8601 validation in parseIsoToMs to avoid Date.parse accepting non-ISO strings, matching the spec’s stricter input requirements.
+
+Files changed or added
+
+reservationService.ts
+Tests
+
+npm test (required escalated permissions to allow local listening sockets for E2E tests)

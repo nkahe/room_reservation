@@ -22,7 +22,16 @@ export interface ListReservationsFilters {
   to?: string;
 }
 
+const ISO_8601_REGEX =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|[+-]\d{2}:\d{2})$/;
+
 function parseIsoToMs(value: string, field: string): number {
+  if (!ISO_8601_REGEX.test(value)) {
+    throw new ValidationError(`${field} must be a valid ISO 8601 timestamp`, {
+      field,
+    });
+  }
+
   const parsed = Date.parse(value);
   if (Number.isNaN(parsed)) {
     throw new ValidationError(`${field} must be a valid ISO 8601 timestamp`, {
