@@ -83,7 +83,7 @@ Body:
 {
   "startTime": "2026-01-21T10:00:00Z",
   "endTime": "2026-01-21T11:00:00Z",
-  "reservedBy": "optional string"
+  "reservedBy": "string"
 }
 ```
 
