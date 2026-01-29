@@ -6237,3 +6237,57 @@ Not run (markdown-only changes)
 Suggestions
 
 If you want, I can also normalize the remaining “###### ChatGPT said:” headings for consistent formatting.
+
+
+this gives error:
+import request from "supertest";
+
+Could not find a declaration file for module 'supertest'. '~/projects/room_reservation_API/node_modules/supertest/index.js' implicitly has an 'any' type.
+  Try npm i --save-dev @types/supertest if it exists or add a new declaration (.d.ts) file containing declare module 'supertest';ts(7016)
+
+
+Installed @types/supertest to provide TypeScript declarations for the supertest import used in tests, which resolves the ts(7016) error.
+
+Files changed or added
+
+package.json
+package-lock.json
+Suggestions
+
+If you want, run npm test to confirm nothing else is impacted.
+
+reservationService-create.test.ts
+106
+Argument of type '{ roomId: string; startTime: string; endTime: string; }' is not assignable to parameter of type 'CreateReservationInput'.
+  Property 'reservedBy' is missing in type '{ roomId: string; startTime: string; endTime: string; }' but required in type 'CreateReservationInput'.ts(2345)
+reservationService.ts(17, 3): 'reservedBy' is declared here.
+
+Edited
+reservationService-create.test.ts
+import { InMemoryReservationRepository } from "../src/repositories/inMemoryReservationRepository";
+import { ReservationService } from "../src/services/reservationService";
+import {
+  CreateReservationInput,
+  ReservationService,
+} from "../src/services/reservationService";
+import { Clock } from "../src/services/clock";
+        endTime,
+      } as unknown as {
+        roomId: string;
+        startTime: string;
+        endTime: string;
+      })
+      } as unknown as CreateReservationInput)
+    ).toThrow(ValidationError);
+
+Adjusted the test to cast the missing-reservedBy case to CreateReservationInput, keeping the test intent while satisfying TypeScript.
+
+Files changed or added
+
+reservationService-create.test.ts
+Tests
+
+npm test (required escalated permissions to allow local listening sockets for E2E tests)
+Suggestions
+
+If you want, I can update other tests to use CreateReservationInput for consistency.

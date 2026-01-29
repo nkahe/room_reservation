@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { InMemoryReservationRepository } from "../src/repositories/inMemoryReservationRepository";
-import { ReservationService } from "../src/services/reservationService";
+import {
+  CreateReservationInput,
+  ReservationService,
+} from "../src/services/reservationService";
 import { Clock } from "../src/services/clock";
 import {
   OverlapError,
@@ -106,11 +109,7 @@ describe("ReservationService.createReservation", () => {
         roomId: "alpha",
         startTime,
         endTime,
-      } as unknown as {
-        roomId: string;
-        startTime: string;
-        endTime: string;
-      })
+      } as unknown as CreateReservationInput)
     ).toThrow(ValidationError);
   });
 
