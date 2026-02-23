@@ -1,9 +1,9 @@
 # Meeting Room Reservation API
-
-A small REST API for reserving meeting rooms.
+A small REST API for reserving meeting rooms. Exercise, which I did mainly with AI, as instructed.
 
 ## Table of contents
 
+- [Requirements](#requirements)
 - [Technologies](#technologies)
 - [Assumptions](#assumptions)
 - [Architecture](#architecture)
@@ -12,6 +12,14 @@ A small REST API for reserving meeting rooms.
 - [Getting started](#getting-started)
 - [Example curl commands](#example-curl-commands)
 - [Development approach](#development-approach)
+
+## Requirements
+
+- Able to list, add and remove room reservations.
+- Reservation has to be in the future.
+- New reservation starting time has to be before ending time.
+- Reservations must not overlap.
+
 
 ## Technologies
 
@@ -97,9 +105,10 @@ All errors return JSON:
 {
   "error": {
     "code": "STRING_CODE",
-    "message": "Human readable message",
-    "details": {}
-  }
+"message": "Human readable message",
+  
+  "details": {}
+}
 }
 ```
 
@@ -120,9 +129,9 @@ Path params:
 Body:
 ```json
 {   
-  "startTime": "2026-01-21T10:00:00Z",
-  "endTime": "2026-01-21T11:00:00Z",
-  "reservedBy": "Ada"
+"startTime": "2026-01-21T10:00:00Z",
+"endTime": "2026-01-21T11:00:00Z",
+"reservedBy": "Ada"
 }
 ```
 
@@ -138,12 +147,12 @@ Success:
 Response body (Reservation DTO):
 ```json
 {
-  "id": "string",
-  "roomId": "string",
-  "startTime": "2026-01-21T10:00:00.000Z",
-  "endTime": "2026-01-21T11:00:00.000Z",
-  "reservedBy": "string",
-  "createdAt": "2026-01-20T12:34:56.000Z"
+"id": "string",
+"roomId": "string",
+"startTime": "2026-01-21T10:00:00.000Z",
+"endTime": "2026-01-21T11:00:00.000Z",
+"reservedBy": "string",
+"createdAt": "2026-01-20T12:34:56.000Z"
 }
 ```
 
@@ -154,12 +163,11 @@ Response types:
 - `endTime`: string (ISO 8601)
 - `reservedBy`: string
 - `createdAt`: string (ISO 8601)
-    
+
 Errors:
 -   400 invalid input (missing fields, invalid timestamps, start>=end)
 -   404 unknown room
 -   409 overlap conflict
-    
 
 #### List reservations for a room
 
@@ -175,14 +183,14 @@ Query params:
 -   `from` needs to be before `to`.
 -   Results are sorted by `startTime` ascending.
 -   Optional filters:
-    -   `from`: include reservations where `endTime > from`
-    -   `to`: include reservations where `startTime < to`
+  -   `from`: include reservations where `endTime > from`
+  -   `to`: include reservations where `startTime < to`
 
 Response body:
 ```json
 {
-  "roomId": "string",
-  "reservations": [ /* Reservation DTO array */ ]
+"roomId": "string",
+"reservations": [ /* Reservation DTO array */ ]
 }
 ```
 
@@ -209,7 +217,7 @@ Path params:
 `GET /health`
 
 -   200 `{ "status": "ok" }`
-    
+  
 
 ## Getting started
 
@@ -217,7 +225,7 @@ Path params:
 
 -   Node.js 18+ (or 20+)
 -   npm
-    
+  
 
 ### Install
 
@@ -262,8 +270,8 @@ Create:
 
 ```bash
 curl -s -X POST "http://localhost:3000/rooms/alpha/reservations" \
-  -H "content-type: application/json" \
-  -d '{"startTime":"2026-01-21T10:00:00Z","endTime":"2026-01-21T11:00:00Z","reservedBy":"Ada"}' | jq
+-H "content-type: application/json" \
+-d '{"startTime":"2026-01-21T10:00:00Z","endTime":"2026-01-21T11:00:00Z","reservedBy":"Ada"}' | jq
     ```
 
 List:
